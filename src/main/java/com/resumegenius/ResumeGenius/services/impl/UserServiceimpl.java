@@ -7,6 +7,7 @@ import com.resumegenius.ResumeGenius.services.UserService;
 import com.resumegenius.ResumeGenius.shared.dto.UserDto;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -32,5 +33,13 @@ public class UserServiceimpl implements UserService {
         BeanUtils.copyProperties(newUserDto,newUser);
 
         return newUserDto;
+    }
+
+    @Override
+    public UserEntity findUserByEmail(String email) throws InvocationTargetException, IllegalAccessException {
+        UserEntity userEntity = new UserEntity();
+        userEntity =  userRepository.findByEmail(email);
+        if (userEntity == null) throw new UsernameNotFoundException("email not found");
+        return userEntity;
     }
 }
